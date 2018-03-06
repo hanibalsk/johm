@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.restfb.Facebook;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.Transaction;
@@ -262,7 +263,7 @@ public final class JOhm {
 					pendingArraysToPersist.put(redisArray, backingArray);
 				}
 				JOhmUtils.Validator.checkAttributeReferenceIndexRules(field);
-				if (field.isAnnotationPresent(Attribute.class)) {
+				if (field.isAnnotationPresent(Attribute.class) || field.isAnnotationPresent(Facebook.class)) {
 					fieldName = field.getName();
 					Object fieldValueObject = field.get(model);
 					if (fieldValueObject != null) {

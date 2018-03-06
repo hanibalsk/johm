@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.restfb.Facebook;
 import redis.clients.johm.collections.RedisList;
 import redis.clients.johm.collections.RedisMap;
 import redis.clients.johm.collections.RedisSet;
@@ -476,7 +477,7 @@ public final class JOhmUtils {
         }
 
         static void checkAttributeReferenceIndexRules(final Field field) {
-            boolean isAttribute = field.isAnnotationPresent(Attribute.class);
+            boolean isAttribute = field.isAnnotationPresent(Attribute.class) || field.isAnnotationPresent(Facebook.class);
             boolean isReference = field.isAnnotationPresent(Reference.class);
             boolean isIndexed = field.isAnnotationPresent(Indexed.class);
             if (isAttribute) {
@@ -541,5 +542,6 @@ public final class JOhmUtils {
         JOHM_SUPPORTED_ANNOTATIONS.add(Indexed.class);
         JOHM_SUPPORTED_ANNOTATIONS.add(Model.class);
         JOHM_SUPPORTED_ANNOTATIONS.add(Reference.class);
+        JOHM_SUPPORTED_ANNOTATIONS.add(Facebook.class);
     }
 }
