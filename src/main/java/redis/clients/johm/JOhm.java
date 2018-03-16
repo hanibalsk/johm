@@ -548,7 +548,7 @@ public final class JOhm {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> Set<T> getAll(Class<?> clazz) {
+	public static <T> Set<T> getAll(Class<?> clazz, String... ignoring) {
 		JOhmUtils.Validator.checkValidModelClazz(clazz);
         JOhmUtils.Validator.checkSupportAll(clazz);
 		Set<Object> results = null;
@@ -559,7 +559,7 @@ public final class JOhm {
 			results = new HashSet<Object>();
 			Object indexed = null;
 			for (String modelIdString : modelIdStrings) {
-				indexed = get(clazz, Long.parseLong(modelIdString));
+				indexed = get(clazz, Long.parseLong(modelIdString), ignoring);
 				if (indexed != null) {
 					results.add(indexed);
 				}
