@@ -16,6 +16,7 @@ import redis.clients.util.Pool;
  * operations between the Object Models at one end and Redis Persistence Models
  * on the other.
  */
+@SuppressWarnings("ALL")
 public final class JOhm {
 	private static Pool<Jedis> pool;
 
@@ -397,6 +398,34 @@ public final class JOhm {
         
         return nest.cat(JOhmUtils.getId(model)).expire(seconds);
     }
+
+	public static <T> List<Long> expireIndexes(T model) {
+		final Nest<T> nest = initIfNeeded(model);
+		final List<Long> result = new ArrayList<Long>();
+
+		for (Field field : JOhmUtils.gatherAllFields(model.getClass())) {
+			if (field.isAnnotationPresent(Indexed.class)) {
+				field.setAccessible(true);
+				Object fieldValue = null;
+				try {
+					fieldValue = field.get(model);
+				} catch (IllegalArgumentException e) {
+					throw new JOhmException(e);
+				} catch (IllegalAccessException e) {
+					throw new JOhmException(e);
+				}
+				if (fieldValue != null && field.isAnnotationPresent(Reference.class)) {
+					fieldValue = JOhmUtils.getId(fieldValue);
+				}
+				if (!JOhmUtils.isNullOrEmpty(fieldValue) && field.isAnnotationPresent(Expired.class)) {
+					int seconds = field.getAnnotation(Expired.class).expire();
+					result.add(nest.cat(field.getName()).cat(fieldValue).expire(seconds));
+				}
+			}
+		}
+
+		return result;
+	}
 
 	@SuppressWarnings("unchecked")
 	public static boolean delete(Class<?> clazz, long id,
