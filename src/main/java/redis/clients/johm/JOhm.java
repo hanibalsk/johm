@@ -425,7 +425,7 @@ public final class JOhm {
                             for (Object obj : objValue) {
                                 Long id = JOhmUtils.getId(obj);
                                 result.add(nest.cat(field.getName()).cat(id).expire(seconds));
-                                result.add(nest.cat(id).cat(field.getName()).expire(seconds));
+                                result.add(nest.cat(JOhmUtils.getId(obj)).cat(field.getName()).expire(seconds));
                             }
                         }
                     } else if (field.isAnnotationPresent(CollectionList.class)) {
@@ -434,7 +434,7 @@ public final class JOhm {
                             for (Object obj : objValue) {
                                 Long id = JOhmUtils.getId(obj);
                                 result.add(nest.cat(field.getName()).cat(id).expire(seconds));
-                                result.add(nest.cat(id).cat(field.getName()).expire(seconds));
+                                result.add(nest.cat(JOhmUtils.getId(obj)).cat(field.getName()).expire(seconds));
                             }
                         }
                     } else if (field.isAnnotationPresent(CollectionMap.class)) {
