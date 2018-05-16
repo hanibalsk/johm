@@ -390,7 +390,31 @@ public final class JOhm {
                         fieldValue = JOhmUtils.getId(fieldValue);
                     }
                     if (!JOhmUtils.isNullOrEmpty(fieldValue)) {
-                        nest.cat(field.getName()).cat(fieldValue).expire(seconds);
+                        if (field.isAnnotationPresent(CollectionSet.class)) {
+                            //TODO check if OK
+                            Set<Object> objValue = (Set<Object>) fieldValue;
+                            if (!objValue.isEmpty()) {
+                                for (Object obj : objValue) {
+                                    Long id = JOhmUtils.getId(obj);
+                                    nest.cat(field.getName()).cat(id).expire(seconds);
+                                    nest.cat(JOhmUtils.getId(obj)).cat(field.getName()).expire(seconds);
+                                }
+                            }
+                        } else if (field.isAnnotationPresent(CollectionList.class)) {
+                            //TODO check if OK
+                            List<Object> objValue = (List<Object>) fieldValue;
+                            if (!objValue.isEmpty()) {
+                                for (Object obj : objValue) {
+                                    Long id = JOhmUtils.getId(obj);
+                                    nest.cat(field.getName()).cat(id).expire(seconds);
+                                    nest.cat(JOhmUtils.getId(obj)).cat(field.getName()).expire(seconds);
+                                }
+                            }
+                        } else if (field.isAnnotationPresent(CollectionMap.class)) {
+                            nest.cat(JOhmUtils.getId(model)).cat(field.getName()).expire(seconds);
+                        } else {
+                            nest.cat(field.getName()).cat(fieldValue).expire(seconds);
+                        }
                     }
                 }
             }
