@@ -447,6 +447,11 @@ public final class JOhm {
         return result;
     }
 
+    public static <T> Long ttl(T model) {
+        final Nest<T> nest = initIfNeeded(model);
+        return nest.cat(JOhmUtils.getId(model)).ttl();
+    }
+
     @SuppressWarnings("unchecked")
     public static boolean delete(Class<?> clazz, long id,
                                  boolean deleteIndexes, boolean deleteChildren) {

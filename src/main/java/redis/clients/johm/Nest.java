@@ -121,6 +121,13 @@ public class Nest<T> {
         return expire;
     }
 
+    public Long ttl() {
+        Jedis jedis = getResource();
+        Long expire = jedis.ttl(key());
+        returnResource(jedis);
+        return expire;
+    }
+
     public List<Object> multi(TransactionBlock transaction) {
         Jedis jedis = getResource();
         try {
