@@ -411,6 +411,12 @@ public final class JOhm {
                                 }
                             }
                         } else if (field.isAnnotationPresent(CollectionMap.class)) {
+                            Map<String, Object> objValue = (Map<String, Object>) fieldValue;
+                            if (!objValue.isEmpty()) {
+                                for (String key : objValue.keySet()) {
+                                    nest.cat(field.getName()).cat(key).expire(seconds);
+                                }
+                            }
                             nest.cat(JOhmUtils.getId(model)).cat(field.getName()).expire(seconds);
                         } else {
                             nest.cat(field.getName()).cat(fieldValue).expire(seconds);
